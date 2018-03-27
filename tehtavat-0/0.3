@@ -1,7 +1,17 @@
+https://www.websequencediagrams.com/
+
 title navigointi muistiinpanosivulle
 käyttäjä->selain: 
 note left of selain
   käyttäjä klikkaa linkkiä
 end note
 selain->palvelin: GET fullstack-exampleapp.herokuapp.com/notes
-palvelin->selain: status 304 not modified
+palvelin->selain: status 200, sisältö html
+selain->palvelin: GET fullstack-exampleapp.herokuapp.com/main.css
+palvelin->selain: status 200, css
+selain->palvelin: GET fullstack-exampleapp.herokuapp.com/main.js
+palvelin->selain: status 200, javascript
+selain->palvelin: GET fullstack-exampleapp.herokuapp.com/data.json
+palvelin->selain: status 200, json-data
+note left of selain
+  selain näyttää sivun jossa muistiinpanoja
