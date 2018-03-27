@@ -1,0 +1,22 @@
+https://www.websequencediagrams.com/
+
+title muistiinpanon tallennus
+käyttäjä->selain: 
+note left of selain
+  käyttäjä painaa 'tallenna' kirjoitettuaan kenttään
+end note
+selain->palvelin: POST fullstack-exampleapp.herokuapp.com/new_note
+palvelin->selain: status 302, uudelleenohjaus
+note right of selain
+  tämän jälkeen sivu ladataan uudelleen
+end note
+selain->palvelin: GET fullstack-exampleapp.herokuapp.com/notes
+palvelin->selain: status 200, html
+selain->palvelin: GET fullstack-exampleapp.herokuapp.com/main.css
+palvelin->selain: status 200, css
+selain->palvelin: GET fullstack-exampleapp.herokuapp.com/main.js
+palvelin->selain: status 200, javascript
+selain->palvelin: GET fullstack-exampleapp.herokuapp.com/data.json
+palvelin->selain: status 200, json-data
+note left of selain
+  selain näyttää sivun jossa muistiinpanoja
