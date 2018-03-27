@@ -11,7 +11,7 @@ loop sivu ladataan, vrt tehtävä 0.3
 end
 
 note left of selain
-  selain näyttää sivun jossa muistiinpanoja
+  selain näyttää sivun jossa muistiinpanoja (0.5)
 end note
 käyttäjä->selain:
 note left of selain
@@ -20,5 +20,5 @@ end note
 selain->palvelin: POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
 palvelin->selain: status 201, created
 note left of selain
-  selain päivittää javascriptin avulla muistiinpanot
+  selain päivittää javascriptin avulla muistiinpanot (0.6)
 end note
