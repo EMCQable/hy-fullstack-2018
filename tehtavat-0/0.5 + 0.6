@@ -5,7 +5,7 @@ käyttäjä->selain:
 note left of selain
   sivu ladataan ensi kerran
 end note
-loop sivu ladataan
+loop sivu ladataan, vrt tehtävä 0.3
     selain->palvelin:4 x get
     palvelin->selain:4 x HTTP CODE 200
 end
