@@ -1,0 +1,24 @@
+https://www.websequencediagrams.com/
+
+title muistiinpanon tallennus
+käyttäjä->selain: 
+note left of selain
+  sivu ladataan ensi kerran
+end note
+loop sivu ladataan
+    selain->palvelin:4 x get
+    palvelin->selain:4 x HTTP CODE 200
+end
+
+note left of selain
+  selain näyttää sivun jossa muistiinpanoja
+end note
+käyttäjä->selain:
+note left of selain
+  käyttäjä painaa tallenna-nappia
+end note
+selain->palvelin: POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+palvelin->selain: status 201, created
+note left of selain
+  selain päivittää javascriptin avulla muistiinpanot
+end note
