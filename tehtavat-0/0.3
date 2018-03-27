@@ -1,0 +1,7 @@
+title navigointi muistiinpanosivulle
+käyttäjä->selain: 
+note left of selain
+  käyttäjä klikkaa linkkiä
+end note
+selain->palvelin: GET fullstack-exampleapp.herokuapp.com/notes
+palvelin->selain: status 304 not modified
