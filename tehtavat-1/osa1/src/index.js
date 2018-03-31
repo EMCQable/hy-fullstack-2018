@@ -29,28 +29,28 @@ const App = () => {
   )
 }
 
-const Otsikko = (props) => {
-  return <h1>{props.kurssi.nimi}</h1>
+const Otsikko = ({kurssi}) => {
+  return <h1>{kurssi.nimi}</h1>
 }
 
-const Sisalto = (props) => {
+const Sisalto = ({kurssi}) => {
   return (
     <div>
-      <Osa osa={props.kurssi.osat[0]} />
-      <Osa osa={props.kurssi.osat[1]} />
-      <Osa osa={props.kurssi.osat[2]} />
+      <Osa osa={kurssi.osat[0]} />
+      <Osa osa={kurssi.osat[1]} />
+      <Osa osa={kurssi.osat[2]} />
     </div>
   )
 }
 
-const Osa = (props) => {
+const Osa = ({osa}) => {
   return (
-    <p> {props.osa.nimi} {props.osa.tehtavia} </p>
+    <p> {osa.nimi} {osa.tehtavia} </p>
   )
 }
 
-const Yhteensa = (props) => {
-  return <p>yhteensä {props.kurssi.osat[0].tehtavia + props.kurssi.osat[1].tehtavia + props.kurssi.osat[2].tehtavia} tehtävää </p>
+const Yhteensa = ({kurssi}) => {
+  return <p>yhteensä {kurssi.osat[0].tehtavia + kurssi.osat[1].tehtavia + kurssi.osat[2].tehtavia} tehtävää </p>
 }
 
 ReactDOM.render(
