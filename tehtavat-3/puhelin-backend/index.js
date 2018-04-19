@@ -8,7 +8,7 @@ const Person = require('./models/person')
 app.use(cors())
 app.use(bodyParser.json())
 app.use(express.static('build'))
-morgan.token('content', function (req, res) {
+morgan.token('content', function (req) {
   return JSON.stringify(req.body)
 })
 app.use(morgan(':method :url :content :status :res[content-length] - :response-time ms'))
@@ -54,9 +54,7 @@ app.get('/api/persons/:id', (req, res) => {
 app.delete('/api/persons/:id', (req, res) => {
   Person
     .findByIdAndRemove(req.params.id)
-    .then(result => {
-      res.status(204).end()
-    })
+    .then(res.status(204).end())
     .catch(err => {
       res.status(400).send({ error: err })
     })
@@ -86,7 +84,7 @@ app.post('/api/persons', (req, res) => {
             res.json(Person.format(savedPerson))
           })
       } else {
-        res.status(400).json({error: 'duplicate'})
+        res.status(400).json({ error: 'duplicate' })
       }
     })
 })

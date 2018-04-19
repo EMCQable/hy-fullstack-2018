@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 
 require('dotenv').config()
-console.log(process.env)
 // korvaa url oman tietokantasi urlilla. ethän laita salasanaa Gothubiin!
 const url = process.env.MONGODB_URI
 
