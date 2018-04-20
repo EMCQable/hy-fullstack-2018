@@ -2,49 +2,7 @@ const supertest = require('supertest')
 const { app, server } = require('../index')
 const api = supertest(app)
 const Blog = require('../models/blog')
-
-const initialBlogs = [
-  {
-    _id: '5a422a851b54a676234d17f7',
-    title: 'React patterns',
-    author: 'Michael Chan',
-    url: 'https://reactpatterns.com/',
-    likes: 7,
-    __v: 0
-  },
-  {
-    _id: '5a422b3a1b54a676234d17f9',
-    title: 'Canonical string reduction',
-    author: 'Edsger W. Dijkstra',
-    url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
-    likes: 12,
-    __v: 0
-  },
-  {
-    _id: '5a422b891b54a676234d17fa',
-    title: 'First class tests',
-    author: 'Robert C. Martin',
-    url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
-    likes: 10,
-    __v: 0
-  },
-  {
-    _id: '5a422ba71b54a676234d17fb',
-    title: 'TDD harms architecture',
-    author: 'Robert C. Martin',
-    url: 'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html',
-    likes: 0,
-    __v: 0
-  },
-  {
-    _id: '5a422bc61b54a676234d17fc',
-    title: 'Type wars',
-    author: 'Robert C. Martin',
-    url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
-    likes: 2,
-    __v: 0
-  }
-]
+const { initialBlogs, blogsInDB } = require('./test_helper')
 
 describe('on http get operations', () => {
   test('request goes through', async () => {
@@ -55,19 +13,17 @@ describe('on http get operations', () => {
   })
 
   test('all blogs are there', async () => {
-    const response = await api
-      .get('/api/blogs')
-    expect(response.body.length).toBe(5)
+    const blogsInDatabase = await blogsInDB()
+    expect(blogsInDatabase.length).toBe(5)
   })
 
   test('the first note is react patterns', async () => {
-    const response = await api
-      .get('/api/blogs')
-    expect(response.body[0].title).toBe('React patterns')
+    const blogsInDatabase = await blogsInDB()
+    expect(blogsInDatabase[0].title).toBe('React patterns')
   })
 })
 
-describe('when doing a http put', () => {
+describe('when doing a http post', () => {
   test('the post is added', async () => {
     const newBlog = {
       _id: '5a422aa71b54a676234d17f8',
@@ -84,12 +40,10 @@ describe('when doing a http put', () => {
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
-    const response = await api
-      .get('/api/blogs')
+    const blogsInDatabase = await blogsInDB()
+    const contents = blogsInDatabase.map(r => r.title)
 
-    const contents = response.body.map(r => r.title)
-
-    expect(response.body.length).toBe(initialBlogs.length + 1)
+    expect(blogsInDatabase.length).toBe(initialBlogs.length + 1)
     expect(contents).toContain('Go To Statement Considered Harmful')
   })
 
@@ -108,10 +62,9 @@ describe('when doing a http put', () => {
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
-    const response = await api
-      .get('/api/blogs')
+    const blogsInDatabase = await blogsInDB()
 
-    expect(response.body[5].likes).toBe(0)
+    expect(blogsInDatabase[5].likes).toBe(0)
   })
 
   test('if no title returns bad request', async () => {
@@ -145,6 +98,56 @@ describe('when doing a http put', () => {
   })
 })
 
+describe('http delete', () => {
+  test('works', async () => {
+
+    const deleting = {
+      _id: '5a422a851b54a676234d17f7',
+      title: 'React patterns',
+      author: 'Michael Chan',
+      url: 'https://reactpatterns.com/',
+      likes: 7,
+      __v: 0
+    }
+
+    await api
+      .delete(`/api/blogs/${deleting._id}`)
+      .expect(204)
+
+    const blogsAfterDelete = await blogsInDB()
+    expect (blogsAfterDelete.length).toBe(4)
+
+    const titles = blogsAfterDelete.map(blog => blog.title)
+    expect(titles).not.toContain('React patterns')
+  })
+})
+
+describe('http put', () => {
+  test('can modify likes', async () => {
+    const modifying = {
+      _id: '5a422a851b54a676234d17f7',
+      title: 'React patterns',
+      author: 'Michael Chan',
+      url: 'https://reactpatterns.com/',
+      likes: 50,
+      __v: 0
+    }
+
+    await api
+      .put(`/api/blogs/${modifying._id}`)
+      .send(modifying)
+
+    const blogsAfterPut = await blogsInDB()
+    expect (blogsAfterPut.length).toBe(5)
+
+    const titles = blogsAfterPut.map(blog => blog.title)
+    expect(titles).toContain('React patterns')
+
+    const likes = blogsAfterPut.map(blog => blog.likes)
+    expect(likes).toContain(50)
+  })
+})
+
 
 beforeEach(async () => {
   await Blog.remove({})
@@ -154,7 +157,6 @@ beforeEach(async () => {
     await blogObject.save()
   }
 })
-
 
 afterAll(() => {
   server.close()
