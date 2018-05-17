@@ -1,5 +1,6 @@
 POST http://localhost:3003/api/blogs
 content-type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ildvd3plciIsImlkIjoiNWE0MjJiODkxYjU0YTY3NjIzNGQxN2ZhIiwiaWF0IjoxNTI2NTYzMTAxfQ.YAmSPE235gJRbk8qyQd2rCrc60Ja-QQuznQxAgYmd3U
 
 {
   "title": "biatch",

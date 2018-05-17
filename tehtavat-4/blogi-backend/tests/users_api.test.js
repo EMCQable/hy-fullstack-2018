@@ -3,6 +3,7 @@ const { app, server } = require('../index')
 const api = supertest(app)
 const User = require('../models/user')
 const { initialUsers, usersInDB } = require('./user_test_helper')
+const bcrypt = require('bcrypt')
 
 
 describe('when doing a http post', () => {
@@ -114,8 +115,9 @@ describe('when doing a http post', () => {
   beforeEach(async () => {
     await User.remove({})
   
-    for (let blog of initialUsers) {
-      let userObject = new User(blog)
+    for (let user of initialUsers) {
+      user.passwordHash = await bcrypt.hash(user.password, 10)
+      let userObject = new User(user)
       await userObject.save()
     }
   })

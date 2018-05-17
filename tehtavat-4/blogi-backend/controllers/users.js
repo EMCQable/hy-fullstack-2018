@@ -3,7 +3,9 @@ const User = require('../models/user')
 const bcrypt = require('bcrypt')
 
 usersRouter.get('/', async (request, response) => {
-  const users = await User.find({})
+  const users = await User
+    .find({})
+    .populate('blogs')
   response.json(users.map(User.format))
 })
 
@@ -18,6 +20,7 @@ usersRouter.post('/', async (request, response) => {
       name: body.name,
       passwordHash
     })
+
     const previousUsers = await User.find({username: user.username})
 
     if (user.name === undefined || user.username === undefined) {
