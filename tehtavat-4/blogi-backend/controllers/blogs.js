@@ -33,15 +33,17 @@ blogsRouter.post('/', async (request, response) => {
     const idToFind = decodedToken.id
     const user = await User.findById(idToFind)
     const userid = user.id
+
+    const blog = new Blog(body)
     user.blogs.push(blog.id)
     await User.findByIdAndUpdate(user.id, user)
 
-    const blog = new Blog(body)
     blog.user = userid
 
     if (blog.url === undefined || blog.title === undefined) {
       return response.status(400).json({ error: 'missing required fields' })
     }
+
     if (blog.likes === undefined) {
       blog.likes = 0
     }
@@ -73,8 +75,9 @@ blogsRouter.delete('/:id', async (request, response) => {
     if (toBeRemoved.user.toString() === userid.toString()) {
       await Blog.findByIdAndRemove(request.params.id)
       response.status(204).end()
+    } else {
+      response.status(403).json({ error: 'trying to remove resource owned by someone else' })
     }
-    response.statusMessage(403).json({ error: 'trying to remove resource owned by someone else' })
   } catch (exception) {
     response.status(500).json({ error: 'something went wrong' })
   }

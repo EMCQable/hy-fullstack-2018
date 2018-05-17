@@ -4,6 +4,8 @@ const api = supertest(app)
 const Blog = require('../models/blog')
 const { initialBlogs, blogsInDB } = require('./test_helper')
 
+const auth = { Authorization: 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ildvd3plciIsImlkIjoiNWE0MjJiODkxYjU0YTY3NjIzNGQxN2ZhIiwiaWF0IjoxNTI2NTYzMTAxfQ.YAmSPE235gJRbk8qyQd2rCrc60Ja-QQuznQxAgYmd3U' }
+
 describe('on http get operations', () => {
   test('request goes through', async () => {
     await api
@@ -36,6 +38,7 @@ describe('when doing a http post', () => {
 
     await api
       .post('/api/blogs')
+      .set(auth)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -58,6 +61,7 @@ describe('when doing a http post', () => {
 
     await api
       .post('/api/blogs')
+      .set(auth)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -78,6 +82,7 @@ describe('when doing a http post', () => {
 
     await api
       .post('/api/blogs')
+      .set(auth)
       .send(newBlog)
       .expect(400)
   })
@@ -93,6 +98,7 @@ describe('when doing a http post', () => {
 
     await api
       .post('/api/blogs')
+      .set(auth)
       .send(newBlog)
       .expect(400)
   })
@@ -112,10 +118,11 @@ describe('http delete', () => {
 
     await api
       .delete(`/api/blogs/${deleting._id}`)
+      .set(auth)
       .expect(204)
 
     const blogsAfterDelete = await blogsInDB()
-    expect (blogsAfterDelete.length).toBe(4)
+    expect(blogsAfterDelete.length).toBe(4)
 
     const titles = blogsAfterDelete.map(blog => blog.title)
     expect(titles).not.toContain('React patterns')
@@ -138,7 +145,7 @@ describe('http put', () => {
       .send(modifying)
 
     const blogsAfterPut = await blogsInDB()
-    expect (blogsAfterPut.length).toBe(5)
+    expect(blogsAfterPut.length).toBe(5)
 
     const titles = blogsAfterPut.map(blog => blog.title)
     expect(titles).toContain('React patterns')
