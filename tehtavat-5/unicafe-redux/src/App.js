@@ -1,7 +1,8 @@
 import React from 'react'
 
-const Statistiikka = () => {
-  const palautteita = 0
+const Statistiikka = ({ zero, store }) => {
+  const stats = store.getState()
+  const palautteita = stats.good + stats.bad + stats.ok
 
   if (palautteita === 0) {
     return (
@@ -12,6 +13,9 @@ const Statistiikka = () => {
     )
   }
 
+  const positiiviset = 100 * stats.good/palautteita
+  const keskiarvo = (stats.good - stats.bad) / palautteita
+
   return (
     <div>
       <h2>statistiikka</h2>
@@ -19,35 +23,39 @@ const Statistiikka = () => {
         <tbody>
           <tr>
             <td>hyvä</td>
-            <td></td>
+            <td>{stats.good}</td>
           </tr>
           <tr>
             <td>neutraali</td>
-            <td></td>
+            <td>{stats.ok}</td>
           </tr>
           <tr>
             <td>huono</td>
-            <td></td>
+            <td>{stats.bad}</td>
           </tr>
           <tr>
             <td>keskiarvo</td>
-            <td></td>
+            <td>{keskiarvo}</td>
           </tr>
           <tr>
             <td>positiivisia</td>
-            <td></td>
+            <td>{positiiviset}</td>
           </tr>
         </tbody>
       </table>
 
-      <button>nollaa tilasto</button>
+      <button onClick={zero}>nollaa tilasto</button>
     </div >
   )
 }
 
 class App extends React.Component {
-  klik = (nappi) => () => {
+  constructor(props) {
+    super(props)
+  }
 
+  klik = (nappi) => () => {
+    this.props.store.dispatch({ type: nappi })
   }
 
   render() {
@@ -57,7 +65,7 @@ class App extends React.Component {
         <button onClick={this.klik('GOOD')}>hyvä</button>
         <button onClick={this.klik('OK')}>neutraali</button>
         <button onClick={this.klik('BAD')}>huono</button>
-        <Statistiikka />
+        <Statistiikka zero={this.klik('ZERO')} store={this.props.store} />
       </div>
     )
   }
