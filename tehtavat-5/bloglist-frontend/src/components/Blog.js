@@ -1,8 +1,16 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 export default class Blog extends React.Component {
+  static propTypes = {
+    blog: PropTypes.object.isRequired,
+    like: PropTypes.func.isRequired,
+    remove: PropTypes.func.isRequired
+  }
+
   constructor(props) {
     super(props)
+
     this.state = {
       visible: false
     }
@@ -42,14 +50,12 @@ export default class Blog extends React.Component {
       marginBottom: 5
     }
 
-    const author = this.getAuthor
-
     return (
       <div style={blogStyle}>
-        <div style={hideWhenVisible} onClick={this.toggleVisibility}>
+        <div className='names' style={hideWhenVisible} onClick={this.toggleVisibility}>
           {this.props.blog.title} {this.props.blog.author}
         </div>
-        <div style={showWhenVisible} onClick={this.toggleVisibility}>
+        <div className='full' style={showWhenVisible} onClick={this.toggleVisibility}>
           {this.props.blog.title} {this.props.blog.author} <br />
           <a href={this.props.blog.url}>{this.props.blog.url}</a> <br />
           {this.props.blog.likes} likes

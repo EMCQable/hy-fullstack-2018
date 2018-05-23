@@ -88,7 +88,7 @@ class App extends React.Component {
     }, 5000)
   }
 
-  like = (blog) => () => {
+  like = (blog) => () => {  
     let blogs = this.state.blogs;
     blogs.map(blag => {
       if (blag._id === blog._id) {
@@ -117,7 +117,7 @@ class App extends React.Component {
   }
 
   loginForm = () => (
-    <div>
+    <div className="loginform">
       <h2>Kirjaudu</h2>
 
       <form onSubmit={this.login}>
@@ -144,8 +144,8 @@ class App extends React.Component {
     </div>
   )
 
-  noteForm = () => (
-    <div>
+  blogsForm = () => (
+    <div className="blogs">
       <h2>blogs</h2>
 
       <p>{this.state.user.username} is logged in</p>
@@ -166,7 +166,7 @@ class App extends React.Component {
         <NotificationMessage type="notification" message={this.state.notification} />
         {this.state.user === null && this.loginForm()}
 
-        {this.state.user !== null && this.noteForm()}
+        {this.state.user !== null && this.blogsForm()}
       </div>
     );
   }
