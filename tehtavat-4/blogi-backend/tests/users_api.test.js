@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt')
 
 
 describe('when doing a http post', () => {
-  test('the post is added', async () => {
+  test('the user is added', async () => {
     const newBlog = {
       _id: '5a422aa71b54a676234d17f8',
       name: 'nomen',

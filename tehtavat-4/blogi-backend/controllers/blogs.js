@@ -38,7 +38,7 @@ blogsRouter.post('/', async (request, response) => {
     user.blogs.push(blog.id)
     await User.findByIdAndUpdate(user.id, user)
 
-    blog.user = userid
+    blog.user = user.id
 
     if (blog.url === undefined || blog.title === undefined) {
       return response.status(400).json({ error: 'missing required fields' })
@@ -72,7 +72,7 @@ blogsRouter.delete('/:id', async (request, response) => {
 
     const toBeRemoved = await Blog.findById(request.params.id)
 
-    if (toBeRemoved.user.toString() === userid.toString()) {
+    if (toBeRemoved.user === undefined || toBeRemoved.user.toString() === userid.toString()) {
       await Blog.findByIdAndRemove(request.params.id)
       response.status(204).end()
     } else {
